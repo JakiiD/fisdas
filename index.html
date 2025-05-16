@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Website edukatif tentang Induksi Magnetik dengan simulasi interaktif dan penjelasan hukum Faraday secara modern dan minimalis." />
+    <meta name="keywords" content="Induksi Magnetik, Hukum Faraday, Elektromagnetisme, Simulasi Fisika, Edukasi Fisika, Generator Listrik, Transformator, Wireless Charging" />
+    <meta name="author" content="Web Invasion" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Induksi Magnetik - Edukasi dan Simulasi Hukum Faraday" />
+    <meta property="og:description" content="Belajar induksi magnetik dengan gaya futuristik dan interaktif melalui simulasi hukum Faraday." />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="Induksi Magnetik" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Induksi Magnetik - Edukasi dan Simulasi Hukum Faraday" />
+    <meta name="twitter:description" content="Belajar induksi magnetik dengan gaya futuristik dan interaktif melalui simulasi hukum Faraday." />
+    <meta name="twitter:image" content="" />
+
+    <title>Induksi Magnetik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oxanium:wght@600&display=swap" rel="stylesheet" />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f9fafb;
+        color: #111827;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Oxanium", sans-serif;
+      }
+      .tooltip {
+        position: relative;
+        cursor: help;
+        border-bottom: 1px dotted #2563eb;
+      }
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: max-content;
+        max-width: 260px;
+        background-color: #2563eb;
+        color: #f9fafb;
+        text-align: left;
+        border-radius: 0.375rem;
+        padding: 0.5rem;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.875rem;
+        line-height: 1.3rem;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.6);
+      }
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+      /* Navbar fix height */
+      header {
+        backdrop-filter: saturate(180%) blur(20px);
+        background-color: rgba(255 255 255 / 0.9);
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      /* Custom scroll thumb for range inputs */
+      input[type="range"]::-webkit-slider-thumb {
+        background-color: #2563eb;
+      }
+      input[type="range"]::-moz-range-thumb {
+        background-color: #2563eb;
+      }
+      /* Navbar hover underline effect */
+      nav a {
+        position: relative;
+        padding-bottom: 0.25rem;
+        transition: color 0.3s ease;
+      }
+      nav a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #2563eb;
+        transition: width 0.3s ease;
+      }
+      nav a:hover {
+        color: #2563eb;
+      }
+      nav a:hover::after {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <header class="w-full px-6 py-4 flex justify-between items-center shadow-sm bg-white backdrop-blur-md border-b border-gray-300 sticky top-0 z-50">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-magnet text-blue-600 text-2xl"></i>
+        <h1 class="text-2xl font-bold text-blue-700 tracking-wide">Induksi Magnetik</h1>
+      </div>
+      <nav class="hidden md:flex space-x-10 text-sm font-semibold text-gray-700">
+        <a href="#pengertian">Pengertian</a>
+        <a href="#simulasi">Simulasi</a>
+        <a href="#induksi">Perangkat Induksi</a>
+      </nav>
+      <button id="menuBtn" class="md:hidden text-blue-600 text-3xl leading-none focus:outline-none">☰</button>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden flex-col bg-white shadow-md p-4 md:hidden absolute top-16 left-0 w-full z-40 border-b border-gray-200">
+      <a href="#pengertian" class="block py-2 text-gray-700 hover:text-blue-600 transition">Pengertian</a>
+      <a href="#simulasi" class="block py-2 text-gray-700 hover:text-blue-600 transition">Simulasi</a>
+      <a href="#induksi" class="block py-2 text-gray-700 hover:text-blue-600 transition">Perangkat Induksi</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-5xl font-bold text-blue-700 mb-6 leading-tight">Selamat Datang di Dunia Induksi Magnetik</h2>
+        <p class="text-gray-600 text-lg max-w-lg">
+          Belajar fisika modern dengan gaya minimalis dan interaktif. Pelajari hukum Faraday dengan simulasi yang menarik dan mudah dipahami.
+        </p>
+      </div>
+      <div class="flex justify-center">
+        <img src="image/induksi-magnet.webp" alt="Ilustrasi Magnet" class="rounded-xl shadow-xl transition-transform duration-300 hover:scale-110 max-w-full" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- Grid Section -->
+    <section class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- Pengertian -->
+      <div id="pengertian" class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-semibold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-book"></i> Apa itu Induksi Magnetik?</h3>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          Induksi magnetik adalah <span class="font-semibold text-blue-600">fenomena munculnya arus listrik</span> akibat perubahan medan magnet dalam penghantar. Ini merupakan
+          dasar dari teknologi seperti: <br /><br />
+        </p>
+        <ul class="list-disc list-inside text-gray-600">
+          <li><b>Generator listrik</b> – mengubah energi mekanik ke listrik.</li>
+          <li><b>Transformator</b> – mengatur tegangan listrik.</li>
+          <li><b>Wireless charging</b> – mengisi daya tanpa kabel.</li>
+        </ul>
+      </div>
+
+      <!-- Hukum Faraday -->
+      <div id="hukum" class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-semibold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-bolt"></i> Hukum Faraday</h3>
+        <p class="text-gray-700 text-sm mb-3">Hukum Faraday menyatakan bahwa perubahan fluks magnetik menghasilkan gaya gerak listrik induksi (GGL). Rumus:</p>
+        <pre class="bg-gray-100 p-2 rounded text-xs overflow-x-auto mb-2">ε = - dΦB / dt</pre>
+        <ul class="text-gray-600 text-sm list-disc list-inside">
+          <li>ε = GGL (Volt)</li>
+          <li>ΦB = Fluks Magnetik (Weber)</li>
+          <li>t = Waktu (detik)</li>
+        </ul>
+      </div>
+
+      <!-- Timeline Full Width (tetap dalam grid dan full 100%) -->
+      <div id="timeline" class="bg-white rounded-lg shadow p-6 md:col-span-2">
+        <h3 class="text-2xl font-semibold text-blue-600 mb-6 flex items-center gap-3"><i class="fas fa-history"></i> Timeline Sejarah Penemuan</h3>
+        <div class="flex space-x-8 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-200 py-4">
+          <!-- Item 1 -->
+          <div class="min-w-[250px] flex flex-col items-center bg-blue-50 rounded-lg p-4 relative">
+            <div class="text-blue-600 text-4xl mb-3 animate-bounce" title="1821">📅</div>
+            <h4 class="text-lg font-semibold mb-2">Michael Faraday Lahir</h4>
+            <p class="text-gray-700 text-sm text-center">Lahir di Inggris, 1791. Dia hanya lulusan SD tapi jadi ilmuwan legendaris!</p>
+          </div>
+          <!-- Item 2 -->
+          <div class="min-w-[250px] flex flex-col items-center bg-blue-50 rounded-lg p-4 relative">
+            <div class="text-blue-600 text-4xl mb-3 animate-pulse" title="1831">⚡</div>
+            <h4 class="text-lg font-semibold mb-2">Penemuan Hukum Induksi</h4>
+            <p class="text-gray-700 text-sm text-center">Faraday menemukan hukum induksi magnetik yang menjadi dasar generator listrik.</p>
+          </div>
+          <!-- Item 3 -->
+          <div class="min-w-[250px] flex flex-col items-center bg-blue-50 rounded-lg p-4 relative">
+            <div class="text-blue-600 text-4xl mb-3 animate-bounce" title="1845">🧲</div>
+            <h4 class="text-lg font-semibold mb-2">Eksperimen Elektromagnetik</h4>
+            <p class="text-gray-700 text-sm text-center">Faraday mengembangkan elektromagnetik, membuktikan hubungan listrik dan magnet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simulasi -->
+      <div id="simulasi" class="bg-white rounded-lg shadow p-6 md:col-span-2">
+        <h3 class="text-xl font-semibold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-cogs"></i> Simulasi Interaktif</h3>
+        <p class="text-gray-700 text-sm mb-4">Geser slider untuk melihat bagaimana perubahan medan magnet menghasilkan arus induksi.</p>
+        <form class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-gray-700">Jumlah Lilitan (N): <span id="nVal" class="text-blue-600">50</span></label>
+            <input type="range" id="nInput" min="1" max="200" value="50" class="w-full accent-blue-600" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-gray-700">ΔFluks (Φ) [Weber]: <span id="phiVal" class="text-blue-600">0.02</span></label>
+            <input type="range" id="phiInput" min="0.001" max="0.1" step="0.001" value="0.02" class="w-full accent-blue-600" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-gray-700">ΔWaktu (t) [detik]: <span id="timeVal" class="text-blue-600">0.5</span></label>
+            <input type="range" id="timeInput" min="0.01" max="5" step="0.01" value="0.5" class="w-full accent-blue-600" />
+          </div>
+        </form>
+        <div class="text-center mt-6 text-lg font-semibold text-blue-700">GGL (ε) = <span id="result">-2.00</span> Volt</div>
+        <div class="mt-6">
+          <canvas id="gglChart" class="w-full max-w-3xl mx-auto"></canvas>
+        </div>
+      </div>
+
+      <!-- Visualisasi Perangkat Induksi -->
+      <div id="induksi" class="bg-white rounded-lg shadow p-6 md:col-span-2">
+        <h3 class="text-xl font-semibold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-cube"></i> Visualisasi Perangkat Induksi</h3>
+        <p class="text-gray-700 text-sm mb-6">Berikut beberapa perangkat yang memanfaatkan induksi magnetik:</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <!-- Item 1 -->
+          <div class="tilt bg-blue-50 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:scale-[1.02] duration-300">
+            <img
+              src="image/Generator-Listrik.webp"
+              alt="Generator Listrik"
+              class="w-full h-48 object-contain bg-white p-4"
+            />
+            <div class="p-4 text-center">
+              <h4 class="font-semibold text-blue-700">Generator Listrik</h4>
+              <p class="text-gray-600 text-sm">Mengubah energi mekanik menjadi listrik dengan induksi magnetik.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="tilt bg-blue-50 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:scale-[1.02] duration-300">
+            <img
+              src="image/Transformator.webp"
+              alt="Transformator"
+              class="w-full h-48 object-contain bg-white p-4"
+            />
+            <div class="p-4 text-center">
+              <h4 class="font-semibold text-blue-700">Transformator</h4>
+              <p class="text-gray-600 text-sm">Mengatur tegangan listrik menggunakan induksi antar kumparan.</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="tilt bg-blue-50 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:scale-[1.02] duration-300">
+            <img
+              src="image/Kumparan.webp"
+              alt="Kumparan (Coil)"
+              class="w-full h-48 object-contain bg-white p-4"
+            />
+            <div class="p-4 text-center">
+              <h4 class="font-semibold text-blue-700">Kumparan (Coil)</h4>
+              <p class="text-gray-600 text-sm">Komponen penting dalam menciptakan medan magnet yang berubah.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-700 text-white py-6 text-center">
+      <p>© 2025 Web Inovasion - Semua Hak Dilindungi</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+    <script>
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      window.addEventListener("click", (e) => {
+        if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.add("hidden");
+        }
+      });
+
+      const nInput = document.getElementById("nInput");
+      const phiInput = document.getElementById("phiInput");
+      const timeInput = document.getElementById("timeInput");
+
+      const nVal = document.getElementById("nVal");
+      const phiVal = document.getElementById("phiVal");
+      const timeVal = document.getElementById("timeVal");
+      const result = document.getElementById("result");
+
+      let dataTime = [];
+      let dataGGL = [];
+
+      const ctx = document.getElementById("gglChart").getContext("2d");
+      const gglChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: dataTime,
+          datasets: [
+            {
+              label: "GGL (Volt)",
+              data: dataGGL,
+              backgroundColor: "rgba(59, 130, 246, 0.2)",
+              borderColor: "rgba(59, 130, 246, 1)",
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: "Waktu Δt (s)" } },
+            y: { title: { display: true, text: "GGL ε (Volt)" } },
+          },
+        },
+      });
+
+      function updateGGL() {
+        const N = parseFloat(nInput.value);
+        const phi = parseFloat(phiInput.value);
+        const t = parseFloat(timeInput.value);
+
+        const ggl = -(N * (phi / t)).toFixed(2);
+        result.textContent = ggl;
+        nVal.textContent = N;
+        phiVal.textContent = phi;
+        timeVal.textContent = t;
+
+        // Tambahkan data ke grafik
+        dataTime.push(t);
+        dataGGL.push(ggl);
+        gglChart.update();
+      }
+
+      nInput.addEventListener("input", updateGGL);
+      phiInput.addEventListener("input", updateGGL);
+      timeInput.addEventListener("input", updateGGL);
+
+      // Inisialisasi awal
+      updateGGL();
+
+      VanillaTilt.init(document.querySelectorAll(".tilt"), {
+        max: 15,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.3,
+      });
+    </script>
+  </body>
+</html>
